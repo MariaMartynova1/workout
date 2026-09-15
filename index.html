@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Программа упражнений на плечи</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Заголовок */
+    .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+    }
+
+    .header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    /* Информация */
+    .info-box {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    .info-box strong {
+        color: #667eea;
+    }
+
+    /* Секции */
+    .section {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid;
+    }
+
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+
+    .section-title span {
+        font-size: 0.9rem;
+        color: #777;
+        white-space: nowrap;
+    }
+
+    .warmup {
+        border-left: 6px solid #28a745;
+    }
+
+    .warmup .section-title {
+        color: #28a745;
+        border-color: #28a745;
+    }
+
+    .shoulders {
+        border-left: 6px solid #dc3545;
+    }
+
+    .shoulders .section-title {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .cooldown {
+        border-left: 6px solid #e0a800;
+    }
+
+    .cooldown .section-title {
+        color: #e0a800;
+        border-color: #e0a800;
+    }
+
+    /* Сетка карточек */
+    .exercises-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    /* Карточка */
+    .exercise-card {
+        position: relative;
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 14px;
+        padding: 15px;
+        text-align: center;
+        transition: 0.3s ease;
+        overflow: hidden;
+    }
+
+    .exercise-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .exercise-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #667eea;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .exercise-card h3 {
+        font-size: 1.15rem;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .exercise-card p {
+        color: #666;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    /* Картинки */
+    .exercise-card img {
+        display: block;
+        width: 100%;
+        max-width: 220px;
+        height: 180px;
+        margin: 0 auto 15px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #ddd;
+        background: #eee;
+    }
+
+    /* Кнопка выполнено */
+    .done-button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #667eea;
+        color: white;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .done-button:hover {
+        opacity: 0.9;
+    }
+
+    .done-button.done {
+        background: #28a745;
+    }
+
+    .exercise-card.completed {
+        opacity: 0.75;
+        border-color: #28a745;
+    }
+
+    .exercise-card.completed h3 {
+        text-decoration: line-through;
+    }
+
+    /* Нижняя информация */
+    .footer {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .footer p {
+        margin-bottom: 5px;
+    }
+
+    .footer .small {
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    /* Телефон */
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+        }
+
+        .section {
+            padding: 15px;
+            border-radius: 14px;
+        }
+
+        .section-title {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .section-title h2 {
+            font-size: 1.4rem;
+        }
+
+        .exercises-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .exercise-card img {
+            max-width: 100%;
+            height: 220px;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="container">
+
+```
+<!-- Заголовок -->
+<header class="header">
+    <h1>🏋️ Программа упражнений</h1>
+    <p>Тренировка на плечи на неделю</p>
+</header>
+
+<!-- Информация -->
+<div class="info-box">
+    <p>
+        Выполняйте упражнения последовательно.
+        <strong>Не забывайте про разминку и заминку.</strong>
+    </p>
+</div>
+
+
+<!-- ==================== РАЗМИНКА ==================== -->
+
+<section class="section warmup">
+
+    <div class="section-title">
+        <h2>🔥 Разминка</h2>
+        <span>5 упражнений</span>
+    </div>
+
+    <div class="exercises-grid">
+
+        <div class="exercise-card">
+            <div class="exercise-number">1</div>
+            <h3>Вращение рукой</h3>
+            <p>
+                Круговые вращения прямой рукой:
+                по 10 раз в каждую сторону
+                поочередно каждой рукой.
+            </p>
+            <img src="images/warmup1.gif" alt="Вращение рукой">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">2</div>
+            <h3>Вращение плечами</h3>
+            <p>
+                Синхронные вращения плечами:
+                по 10 раз в каждую сторону.
+            </p>
+            <img src="images/warmup2.gif" alt="Вращение плечами">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">3</div>
+            <h3>Подъем рук</h3>
+            <p>
+                Одновременный подъем рук через стороны,
+                затем впереди себя: 20 раз.
+            </p>
+            <img src="images/warmup3.gif" alt="Подъем рук">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">4</div>
+            <h3>Сведение прямых рук</h3>
+            <p>
+                Сведение двух прямых рук
+                впереди себя: 10 раз.
+            </p>
+            <img src="images/warmup4.gif" alt="Сведение прямых рук">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">5</div>
+            <h3>Сведение рук, согнутых в локтях</h3>
+            <p>
+                Сведение двух согнутых в локтях рук
+                перед собой: 10 раз.
+            </p>
+            <img src="images/warmup5.gif" alt="Сведение рук">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==================== ПЛЕЧИ ==================== -->
+
+<section class="section shoulders">
+
+    <div class="section-title">
+        <h2>💪 Основная тренировка — плечи</h2>
+        <span>10 упражнений</span>
+    </div>
+
+    <div class="exercises-grid">
+
+        <div class="exercise-card">
+            <div class="exercise-number">1</div>
+            <h3>Подъем руки в планке</h3>
+            <p>
+                Встать в боковую планку на локоть,
+                вторую руку поднять 20 раз.
+                Повторить для другой стороны.
+            </p>
+            <img src="images/shoulders1.gif" alt="Подъем руки в планке">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">2</div>
+            <h3>Подъем из планки</h3>
+            <p>
+                Встать в планку на согнутых локтях.
+                Подняться, выпрямив руки.
+                Повторить 30 раз.
+            </p>
+            <img src="images/shoulders2.gif" alt="Подъем из планки">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">3</div>
+            <h3>Сведение рук из положения лежа</h3>
+            <p>
+                Лечь на живот, приподнять плечи,
+                свести одновременно руки в лопатках.
+                Повторить 20 раз.
+            </p>
+            <img src="images/shoulders3.gif" alt="Сведение рук лежа">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">4</div>
+            <h3>Подъем гантелей над собой</h3>
+            <p>
+                Поднимать вверх над собой гантели
+                10–12 раз.
+            </p>
+            <img src="images/shoulders4.gif" alt="Подъем гантелей">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">5</div>
+            <h3>Подъем гантелей над собой — 2</h3>
+            <p>
+                Поднимать вверх над собой гантели
+                другим хватом: 10–12 раз.
+            </p>
+            <img src="images/shoulders5.gif" alt="Подъем гантелей другим хватом">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">6</div>
+            <h3>Подъем гантелей перед собой</h3>
+            <p>
+                Поднимать гантели перед собой
+                прямой рукой 10–12 раз.
+            </p>
+            <img src="images/shoulders6.gif" alt="Подъем гантелей перед собой">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">7</div>
+            <h3>Отведение рук назад</h3>
+            <p>
+                Отведение прямых рук назад
+                из согнутого положения 10–12 раз.
+            </p>
+            <img src="images/shoulders7.gif" alt="Отведение рук назад">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">8</div>
+            <h3>Разведение рук</h3>
+            <p>
+                Разведение рук из согнутого
+                положения в стороны 10–12 раз.
+            </p>
+            <img src="images/shoulders8.gif" alt="Разведение рук">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">9</div>
+            <h3>Разведение рук стоя</h3>
+            <p>
+                Разведение рук в стороны
+                из положения стоя 10–12 раз.
+            </p>
+            <img src="images/shoulders9.gif" alt="Разведение рук стоя">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">10</div>
+            <h3>Подъем гантелей</h3>
+            <p>
+                Подъем гантелей к подбородку
+                10–12 раз.
+            </p>
+            <img src="images/shoulders10.gif" alt="Подъем гантелей к подбородку">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==================== ЗАМИНКА ==================== -->
+
+<section class="section cooldown">
+
+    <div class="section-title">
+        <h2>🧘 Заминка</h2>
+        <span>5 упражнений</span>
+    </div>
+
+    <div class="exercises-grid">
+
+        <div class="exercise-card">
+            <div class="exercise-number">1</div>
+            <h3>Растяжка руки</h3>
+            <p>
+                Растяжка руки в сторону:
+                по 30 секунд на каждую руку.
+            </p>
+            <img src="images/cooldown1.jpg" alt="Растяжка руки">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">2</div>
+            <h3>Замок</h3>
+            <p>
+                Сцепление рук за спиной:
+                по 30 секунд на каждую руку.
+            </p>
+            <img src="images/cooldown2.jpg" alt="Замок">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">3</div>
+            <h3>Подъем рук за спиной</h3>
+            <p>
+                Сомкнуть руки за спиной
+                и поднимать их вверх.
+            </p>
+            <img src="images/cooldown3.jpg" alt="Подъем рук за спиной">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">4</div>
+            <h3>Растяжка плеча</h3>
+            <p>
+                Тянуть прямую руку к другому плечу:
+                по 30 секунд на каждую руку.
+            </p>
+            <img src="images/cooldown4.jpg" alt="Растяжка плеча">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">5</div>
+            <h3>Растяжка сидя</h3>
+            <p>
+                Сесть на пол, руки максимально
+                отставить назад до ощущения натяжения.
+                Ладони развернуть в противоположную сторону,
+                расправить плечи и максимально прогнуться.
+                Сидеть минимум 30 секунд.
+            </p>
+            <img src="images/cooldown5.jpg" alt="Растяжка сидя">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Нижний блок -->
+
+<div class="footer">
+    <p>💪 Отличная работа!</p>
+    <p class="small">
+        Выполняйте упражнения плавно и контролируйте технику.
+    </p>
+</div>
+```
+
+</div>
+
+<script>
+    function markDone(button) {
+        const card = button.closest(".exercise-card");
+
+        card.classList.toggle("completed");
+        button.classList.toggle("done");
+
+        if (card.classList.contains("completed")) {
+            button.textContent = "✓ Выполнено";
+        } else {
+            button.textContent = "✓ Выполнено";
+        }
+    }
+</script>
+
+</body>
+</html>
