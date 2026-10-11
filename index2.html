@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Программа упражнений на пресс</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Заголовок */
+    .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+    }
+
+    .header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    /* Информация */
+    .info-box {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    .info-box strong {
+        color: #667eea;
+    }
+
+    /* Секции */
+    .section {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid;
+    }
+
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+
+    .section-title span {
+        font-size: 0.9rem;
+        color: #777;
+        white-space: nowrap;
+    }
+
+    .warmup {
+        border-left: 6px solid #28a745;
+    }
+
+    .warmup .section-title {
+        color: #28a745;
+        border-color: #28a745;
+    }
+
+    .shoulders {
+        border-left: 6px solid #dc3545;
+    }
+
+    .shoulders .section-title {
+        color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .cooldown {
+        border-left: 6px solid #e0a800;
+    }
+
+    .cooldown .section-title {
+        color: #e0a800;
+        border-color: #e0a800;
+    }
+
+    /* Сетка карточек */
+    .exercises-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    /* Карточка */
+    .exercise-card {
+        position: relative;
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 14px;
+        padding: 15px;
+        text-align: center;
+        transition: 0.3s ease;
+        overflow: hidden;
+    }
+
+    .exercise-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .exercise-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #667eea;
+        color: white;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .exercise-card h3 {
+        font-size: 1.15rem;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .exercise-card p {
+        color: #666;
+        font-size: 0.92rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    /* Картинки */
+    .exercise-card img {
+        display: block;
+        width: 100%;
+        max-width: 220px;
+        height: 180px;
+        margin: 0 auto 15px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #ddd;
+        background: #eee;
+    }
+
+    /* Кнопка выполнено */
+    .done-button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        background: #667eea;
+        color: white;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .done-button:hover {
+        opacity: 0.9;
+    }
+
+    .done-button.done {
+        background: #28a745;
+    }
+
+    .exercise-card.completed {
+        opacity: 0.75;
+        border-color: #28a745;
+    }
+
+    .exercise-card.completed h3 {
+        text-decoration: line-through;
+    }
+
+    /* Нижняя информация */
+    .footer {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .footer p {
+        margin-bottom: 5px;
+    }
+
+    .footer .small {
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    /* Телефон */
+    @media (max-width: 600px) {
+        body {
+            padding: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+        }
+
+        .section {
+            padding: 15px;
+            border-radius: 14px;
+        }
+
+        .section-title {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .section-title h2 {
+            font-size: 1.4rem;
+        }
+
+        .exercises-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .exercise-card img {
+            max-width: 100%;
+            height: 220px;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- Заголовок -->
+<header class="header">
+    <h1>🏋️ Программа упражнений</h1>
+    <p>Тренировка на пресс</p>
+</header>
+
+<!-- Информация -->
+<div class="info-box">
+    <p>
+        Выполняй упражнения последовательно.
+        <strong>Не забывай про разминку и заминку.</strong>
+    </p>
+</div>
+
+
+<!-- ==================== РАЗМИНКА ==================== -->
+
+<section class="section warmup">
+
+    <div class="section-title">
+        <h2>🔥 Разминка</h2>
+        <span>5 упражнений</span>
+    </div>
+
+    <div class="exercises-grid">
+
+        <div class="exercise-card">
+            <div class="exercise-number">1</div>
+            <h3>Подъем коленей</h3>
+            <p>
+                Подъем коленей на месте:
+                по 30 раз на каждую ногу.
+            </p>
+            <img src="images/warmup6.gif" alt="Подъем коленей">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">2</div>
+            <h3>Мельница</h3>
+            <p>
+                Расставить ноги шире ширины плеч, руки вытянуть в стороны, наклоняться, касаясь мыска противоположной ноги:
+                по 10 раз на каждую руку.
+            </p>
+            <img src="images/warmup7.gif" alt="Мельница">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">3</div>
+            <h3>Наклоны в сторону</h3>
+            <p>
+                Поставить ноги на ширине плеч, поднять правую руку вверх, наклониться влево, вытягивая руку, до ощущения натяжения: по 10 раз на каждую руку
+            </p>
+            <img src="images/warmup8.gif" alt="Наклоны в сторону">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">4</div>
+            <h3>Повороты туловища</h3>
+            <p>
+                Ноги на ширине плеч, вытянуть руки в стороны, поворачивать корпус вправо-влево: 10 раз на каждую сторону. 
+            </p>
+            <img src="images/warmup9.gif" alt="Повороты туловища">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">5</div>
+            <h3>Вращение тазом</h3>
+            <p>
+                Поставить ноги на ширине плеч, руки на поясе, вращать тазом по 10 раз по и против часовой стрелки 
+            </p>
+            <img src="images/warmup10.gif" alt="Вращение тазом">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==================== ПЛЕЧИ ==================== -->
+
+<section class="section shoulders">
+
+    <div class="section-title">
+        <h2>💪 Основная тренировка — плечи</h2>
+        <span>10 упражнений</span>
+    </div>
+
+    <div class="exercises-grid">
+
+        <div class="exercise-card">
+            <div class="exercise-number">1</div>
+            <h3>Касание ног лежа</h3>
+            <p>
+               Лечь на спину, согнуть ноги в коленях, касаться пяток поочередно каждой рукой по 10 раз. 
+            </p>
+            <img src="images/Press1.gif" alt="Касание ног лежа">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">2</div>
+            <h3>Дворники</h3>
+            <p>
+                Лечь на спину, поднять ноги, согнув их в коленях, касаться пола каждой ногой, описывая четверть круга: по 10 раз на каждую сторону. 
+            </p>
+            <img src="images/Press2.gif" alt="Дворники">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">3</div>
+            <h3>Подъем туловища из положения лежа</h3>
+            <p>
+                Лечь на спину, согнуть ноги в коленях, скрутившись. Поднимать корпус по 10 раз на каждую сторону. 
+            </p>
+            <img src="images/Press3.gif" alt="Подъем туловища из положения лежа">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">4</div>
+            <h3>Подъем с гантелей над собой</h3>
+            <p>
+                Лечь на спину, ноги выпрямлены, подниматься вверх с гантелей над собой: 10 раз.
+            </p>
+            <img src="images/Press4.gif" alt="Подъем с гантелей над собой">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">5</div>
+            <h3>Скручивания сидя</h3>
+            <p>
+                Сесть на пол, ноги согнуть в коленях, вращать гантелей из стороны в сторону, касаясь пола: 20 касаний. 
+            </p>
+            <img src="images/Press5.gif" alt="Скручивания сидя">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">6</div>
+            <h3>Подъем с гантелей перед собой</h3>
+            <p>
+                Лечь на пол, ноги согнуть в коленях, гантеля на груди, поднимать корпус, оставляя гантель на груди: 10 раз
+            </p>
+            <img src="images/Press6.gif" alt="Подъем гантелей перед собой">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">7</div>
+            <h3>Подъем прямой ноги и туловища с гантелей</h3>
+            <p>
+                Лечь на спину, руки с гантелей вытянуть за головой, поднимать туловище с выпрямленными руками при одновременном подъеме одной вытянутой ноги, чередовать ногу при подъеме: 10-12 раз  
+            </p>
+            <img src="images/Press7.gif" alt="Подъем прямой ноги и туловища с гантелей">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">8</div>
+            <h3>Скручивание с гантелей</h3>
+            <p>
+                Лечь на спину, гантеля на груди, поднимать корпус при одновременном подъеме ног в коленях: 10-12 раз
+            </p>
+            <img src="images/Press8.gif" alt="Скручивание с гантелей">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">9</div>
+            <h3>Подъем согнутой ноги и туловища с гантелей</h3>
+            <p>
+                Лечь на спину, руки с гантелей вытянуть за головой, поднимать туловище с выпрямленными руками при одновременном подъеме согнутой в колене ноги, чередовать ногу при подъеме: 10-12 раз 
+            </p>
+            <img src="images/Press9gif" alt="Подъем согнутой ноги и туловища с гантелей">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">10</div>
+            <h3>Подъем с гантелей на боку</h3>
+            <p>
+                Лечь на бок, оперевшись на согнутую в локте руку, вторую руку с гантелей положить на бок, вытягивать туловище до выпрямленного состояния: 10 раз на каждый бок
+            </p>
+            <img src="images/Press10.gif" alt="Подъем с гантелей на боку">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ==================== ЗАМИНКА ==================== -->
+
+<section class="section cooldown">
+
+    <div class="section-title">
+        <h2>🧘 Заминка</h2>
+        <span>5 упражнений</span>
+    </div>
+
+    <div class="exercises-grid">
+
+        <div class="exercise-card">
+            <div class="exercise-number">1</div>
+            <h3>Наклоны вбок</h3>
+            <p>
+               Поднять одну руку вверх, тянуться в противоположную сторону до ощущений натяжения в боку: по 10 раз на каждый бок
+            </p>
+            <img src="images/cooldown6.jpg" alt="Наклоны вбок">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">2</div>
+            <h3>Вытяжение вверх</h3>
+            <p>
+                Поднять руки и сомкнуть из над собой, тянуться вверх до ощущения натяжения в теле: 20-30 секунд
+            </p>
+            <img src="images/cooldown7.jpg" alt="Вытяжение вверх">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">3</div>
+            <h3>Собака мордой вниз</h3>
+            <p>
+                Встать на четвереньки, руки перед собой на ширине плеч, поднять таз, распрямляя колени и локти, вытянуть спину и ноги, тело должно стоять треугольником с тазом в верхушке: 20-30 секунд 
+            </p>
+            <img src="images/cooldown8.jpg" alt="Собака мордой вниз">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">4</div>
+            <h3>Кобра на согнутых руках</h3>
+            <p>
+               Лечь на живот, руки согнуть в локтях, почувствовать прогиб в пояснице: 30 секунд
+            </p>
+            <img src="images/cooldown9.jpg" alt="Растяжка плеча">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-number">5</div>
+            <h3>Кобра на вытянутых рыках</h3>
+            <p>
+               Лечь на живот, выпрямленные руки поставить перед собой, почувствовать прогиб в пояснице: 20-30 секунд
+            </p>
+            <img src="images/cooldown10.jpg" alt="Кобра на вытянутых рыках">
+            <button class="done-button" onclick="markDone(this)">
+                ✓ Выполнено
+            </button>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Нижний блок -->
+
+<div class="footer">
+    <p>💪 Отличная работа!</p>
+    <p class="small">
+        Выполняй упражнения плавно и контролируй технику.
+    </p>
+</div>
+
+</div>
+
+<script>
+    function markDone(button) {
+        const card = button.closest(".exercise-card");
+
+        card.classList.toggle("completed");
+        button.classList.toggle("done");
+
+        if (card.classList.contains("completed")) {
+            button.textContent = "✓ Выполнено";
+        } else {
+            button.textContent = "✓ Выполнено";
+        }
+    }
+</script>
+
+</body>
+</html>
