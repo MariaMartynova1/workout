@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
 <title>Программа упражнений на плечи</title>
 
 <style>
@@ -266,8 +265,607 @@
             height: 220px;
         }
     }
+
+    /* ===== Прогресс тренировки ===== */
+    .progress-wrap {
+        position: sticky;
+        top: 10px;
+        z-index: 50;
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 15px;
+        padding: 15px 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    .progress-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+
+    .progress-label {
+        font-weight: 600;
+        color: #764ba2;
+    }
+
+    .progress-count {
+        color: #777;
+        white-space: nowrap;
+    }
+
+    .progress-bar {
+        height: 14px;
+        background: #e9ecef;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, #667eea, #764ba2, #28a745);
+        background-size: 200% 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        animation: shimmer 3s linear infinite;
+    }
+
+    @keyframes shimmer {
+        from { background-position: 0% 0; }
+        to { background-position: 200% 0; }
+    }
+
+    .progress-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: #777;
+    }
+
+    .reset-button {
+        border: none;
+        background: none;
+        color: #999;
+        font-size: 0.85rem;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .reset-button:hover {
+        color: #dc3545;
+    }
+
+    /* ===== Два подхода ===== */
+    .sets {
+        display: flex;
+        gap: 8px;
+    }
+
+    .set-btn {
+        flex: 1;
+        padding: 10px 6px;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        background: white;
+        color: #667eea;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .set-btn:hover:not(:disabled) {
+        background: #eef0ff;
+    }
+
+    .set-btn.done {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .set-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .set-btn.ready {
+        background: #667eea;
+        color: white;
+        animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.6); }
+        50% { box-shadow: 0 0 0 8px rgba(102, 126, 234, 0); }
+    }
+
+    /* Таймер отдыха */
+    .rest {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #fff8e1;
+        border: 1px dashed #e0a800;
+    }
+
+    .rest.active {
+        display: block;
+    }
+
+    .rest-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #8a6d00;
+        margin-bottom: 6px;
+    }
+
+    .rest-time {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .rest-bar {
+        height: 6px;
+        background: #f1e3b0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .rest-bar i {
+        display: block;
+        height: 100%;
+        width: 100%;
+        background: #e0a800;
+    }
+
+    .rest-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+    }
+
+    .rest-actions button {
+        flex: 1;
+        padding: 5px;
+        border: 1px solid #e0a800;
+        border-radius: 6px;
+        background: white;
+        color: #8a6d00;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+
+    .motivation {
+        min-height: 1.2em;
+        margin-top: 8px;
+        font-size: 0.88rem;
+        font-style: italic;
+        color: #764ba2;
+    }
+
+    /* Анимация завершения карточки */
+    .exercise-card.pop {
+        animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    /* Всплывающее сообщение */
+    .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 25px;
+        transform: translate(-50%, 150%);
+        max-width: calc(100% - 32px);
+        padding: 14px 22px;
+        border-radius: 12px;
+        background: #333;
+        color: white;
+        font-size: 1rem;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        z-index: 200;
+        transition: transform 0.35s ease;
+    }
+
+    .toast.show {
+        transform: translate(-50%, 0);
+    }
+
+    #confetti {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 150;
+    }
+
+    @media (max-width: 600px) {
+        .progress-wrap {
+            padding: 12px 14px;
+        }
+
+        .progress-top {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+        }
+    }
+
+    /* ===== Уровень и запуск ===== */
+    .start-box {
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+
+    .level-title {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 10px;
+    }
+
+    .level-switch {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .level-switch button {
+        padding: 10px 6px;
+        border: 2px solid #e0e3f5;
+        border-radius: 10px;
+        background: #f8f9ff;
+        cursor: pointer;
+        transition: 0.2s;
+        color: #333;
+        font-family: inherit;
+    }
+
+    .level-switch button b {
+        display: block;
+        font-size: 1rem;
+    }
+
+    .level-switch button small {
+        display: block;
+        margin-top: 3px;
+        color: #777;
+        font-size: 0.78rem;
+    }
+
+    .level-switch button.active {
+        border-color: #667eea;
+        background: #667eea;
+        color: white;
+    }
+
+    .level-switch button.active small {
+        color: rgba(255, 255, 255, 0.85);
+    }
+
+    .start-button {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        font-size: 1.15rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 6px 18px rgba(118, 75, 162, 0.4);
+        transition: 0.2s;
+    }
+
+    .start-button:hover {
+        transform: translateY(-2px);
+    }
+
+    /* ===== Упражнения на время ===== */
+    .timer-btn {
+        position: relative;
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #e0a800;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #ffe08a var(--p, 0%), white var(--p, 0%));
+        color: #8a6d00;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .timer-btn.running {
+        animation: pulse-gold 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-gold {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(224, 168, 0, 0.5); }
+        50% { box-shadow: 0 0 0 7px rgba(224, 168, 0, 0); }
+    }
+
+    .timer-btn.done {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    .manual-link {
+        margin-top: 6px;
+        border: none;
+        background: none;
+        color: #999;
+        font-size: 0.8rem;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    /* ===== Пошаговый режим ===== */
+    .stepper {
+        position: fixed;
+        inset: 0;
+        z-index: 120;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(30, 20, 60, 0.75);
+        backdrop-filter: blur(4px);
+    }
+
+    .stepper[hidden] {
+        display: none;
+    }
+
+    .stepper-inner {
+        width: 100%;
+        max-width: 520px;
+        max-height: 100%;
+        overflow-y: auto;
+        background: white;
+        border-radius: 18px;
+        border-top: 6px solid var(--accent, #667eea);
+        padding: 18px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .stepper-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 0.9rem;
+    }
+
+    .stepper-section {
+        font-weight: 700;
+        color: var(--accent, #667eea);
+    }
+
+    .stepper-count {
+        color: #777;
+        margin-left: auto;
+    }
+
+    .stepper-close {
+        border: none;
+        background: #f1f1f4;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .stepper-bar {
+        height: 6px;
+        margin: 10px 0 15px;
+        background: #eee;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .stepper-bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--accent, #667eea);
+        transition: width 0.4s ease;
+    }
+
+    .stepper-body {
+        text-align: center;
+    }
+
+    .stepper-img {
+        display: block;
+        width: 100%;
+        height: 38vh;
+        min-height: 180px;
+        object-fit: contain;
+        background: #f3f3f6;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .stepper-title {
+        font-size: 1.35rem;
+        margin-bottom: 8px;
+    }
+
+    .stepper-desc {
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .stepper-controls .set-btn,
+    .stepper-controls .timer-btn,
+    .stepper-controls .done-button {
+        padding: 14px 6px;
+        font-size: 1.05rem;
+    }
+
+    .stepper-nav {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .stepper-nav button {
+        flex: 1;
+        padding: 11px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        background: white;
+        font-size: 0.95rem;
+        cursor: pointer;
+    }
+
+    .stepper-nav button:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+
+    /* ===== Итоги ===== */
+    .summary {
+        position: fixed;
+        inset: 0;
+        z-index: 160;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(30, 20, 60, 0.75);
+    }
+
+    .summary[hidden] {
+        display: none;
+    }
+
+    .summary-card {
+        width: 100%;
+        max-width: 440px;
+        background: white;
+        border-radius: 20px;
+        padding: 28px 22px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        animation: pop 0.5s ease;
+    }
+
+    .summary-trophy {
+        font-size: 3.5rem;
+    }
+
+    .summary-card h2 {
+        margin: 6px 0 4px;
+        color: #764ba2;
+    }
+
+    .summary-praise {
+        color: #666;
+        margin-bottom: 18px;
+    }
+
+    .summary-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+
+    .summary-stats div {
+        background: #f6f4ff;
+        border-radius: 12px;
+        padding: 12px 6px;
+    }
+
+    .summary-stats b {
+        display: block;
+        font-size: 1.4rem;
+        color: #667eea;
+    }
+
+    .summary-stats small {
+        color: #777;
+        font-size: 0.8rem;
+    }
+
+    .summary-note {
+        font-size: 0.75rem;
+        color: #999;
+        margin-bottom: 15px;
+    }
+
+    .summary-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .summary-actions button {
+        flex: 1;
+        padding: 12px;
+        border-radius: 10px;
+        border: 2px solid #667eea;
+        background: white;
+        color: #667eea;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .summary-actions button.primary {
+        background: #667eea;
+        color: white;
+    }
+
+    .summary-open {
+        margin-top: 10px;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 10px;
+        background: #667eea;
+        color: white;
+        cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+        .level-switch button small {
+            font-size: 0.7rem;
+        }
+
+        .stepper {
+            padding: 8px;
+        }
+
+        .stepper-inner {
+            padding: 14px;
+        }
+
+        .stepper-img {
+            height: 32vh;
+        }
+    }
 </style>
-```
 
 </head>
 
@@ -275,7 +873,6 @@
 
 <div class="container">
 
-```
 <!-- Заголовок -->
 <header class="header">
     <h1>🏋️ Программа упражнений</h1>
@@ -289,6 +886,31 @@
         <strong>Не забывайте про разминку и заминку.</strong>
     </p>
 </div>
+
+<!-- Уровень и запуск -->
+<div class="start-box">
+    <div class="level-title">Выбери уровень</div>
+    <div class="level-switch" id="levelSwitch">
+        <button type="button" data-level="easy"><b>🌱 Новичок</b><small>1 подход · отдых 45 с</small></button>
+        <button type="button" data-level="mid"><b>💪 Средний</b><small>2 подхода · отдых 60 с</small></button>
+        <button type="button" data-level="pro"><b>🔥 Профи</b><small>3 подхода · отдых 90 с</small></button>
+    </div>
+    <button class="start-button" id="startButton" type="button">▶ Начать тренировку</button>
+</div>
+
+<!-- Прогресс тренировки -->
+<div class="progress-wrap">
+    <div class="progress-top">
+        <span class="progress-label" id="progressLabel">Поехали! Первый шаг — самый важный</span>
+        <span class="progress-count" id="progressCount">0 / 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-bottom">
+        <span><span id="progressPercent">0%</span> · ⏱ <span id="elapsed">0:00</span></span>
+        <button class="reset-button" id="resetButton" type="button">↺ Начать заново</button>
+    </div>
+</div>
+
 
 
 <!-- ==================== РАЗМИНКА ==================== -->
@@ -312,7 +934,7 @@
             </p>
             <img src="images/warmup1.gif" alt="Вращение рукой">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -326,7 +948,7 @@
             </p>
             <img src="images/warmup2.gif" alt="Вращение плечами">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -340,7 +962,7 @@
             </p>
             <img src="images/warmup3.gif" alt="Подъем рук">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -354,7 +976,7 @@
             </p>
             <img src="images/warmup4.gif" alt="Сведение прямых рук">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -368,7 +990,7 @@
             </p>
             <img src="images/warmup5.gif" alt="Сведение рук">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -397,7 +1019,7 @@
             </p>
             <img src="images/shoulders1.gif" alt="Подъем руки в планке">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -412,7 +1034,7 @@
             </p>
             <img src="images/shoulders2.gif" alt="Подъем из планки">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -427,7 +1049,7 @@
             </p>
             <img src="images/shoulders3.gif" alt="Сведение рук лежа">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -441,7 +1063,7 @@
             </p>
             <img src="images/shoulders4.gif" alt="Подъем гантелей">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -455,7 +1077,7 @@
             </p>
             <img src="images/shoulders5.gif" alt="Подъем гантелей другим хватом">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -469,7 +1091,7 @@
             </p>
             <img src="images/shoulders6.gif" alt="Подъем гантелей перед собой">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -483,7 +1105,7 @@
             </p>
             <img src="images/shoulders7.gif" alt="Отведение рук назад">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -497,7 +1119,7 @@
             </p>
             <img src="images/shoulders8.gif" alt="Разведение рук">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -511,7 +1133,7 @@
             </p>
             <img src="images/shoulders9.gif" alt="Разведение рук стоя">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -525,7 +1147,7 @@
             </p>
             <img src="images/shoulders10.gif" alt="Подъем гантелей к подбородку">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -553,7 +1175,7 @@
             </p>
             <img src="images/cooldown1.jpg" alt="Растяжка руки">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -567,7 +1189,7 @@
             </p>
             <img src="images/cooldown2.jpg" alt="Замок">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -581,7 +1203,7 @@
             </p>
             <img src="images/cooldown3.jpg" alt="Подъем рук за спиной">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -595,7 +1217,7 @@
             </p>
             <img src="images/cooldown4.jpg" alt="Растяжка плеча">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -612,7 +1234,7 @@
             </p>
             <img src="images/cooldown5.jpg" alt="Растяжка сидя">
             <button class="done-button" onclick="markDone(this)">
-                ✓ Выполнено
+                Выполнить
             </button>
         </div>
 
@@ -628,23 +1250,683 @@
         Выполняйте упражнения плавно и контролируйте технику.
     </p>
 </div>
-```
 
 </div>
 
+<div class="toast" id="toast"></div>
+<canvas id="confetti"></canvas>
+
+<!-- Пошаговый режим -->
+<div class="stepper" id="stepper" hidden>
+    <div class="stepper-inner">
+        <div class="stepper-head">
+            <span class="stepper-section"></span>
+            <span class="stepper-count"></span>
+            <button class="stepper-close" type="button" title="Закрыть">✕</button>
+        </div>
+        <div class="stepper-bar"><i></i></div>
+        <div class="stepper-body">
+            <img class="stepper-img" alt="">
+            <h3 class="stepper-title"></h3>
+            <p class="stepper-desc"></p>
+            <div class="stepper-controls"></div>
+        </div>
+        <div class="stepper-nav">
+            <button type="button" data-nav="prev">← Назад</button>
+            <button type="button" data-nav="next">Дальше →</button>
+        </div>
+    </div>
+</div>
+
+<!-- Итоги -->
+<div class="summary" id="summary" hidden>
+    <div class="summary-card">
+        <div class="summary-trophy">🏆</div>
+        <h2>Тренировка завершена!</h2>
+        <p class="summary-praise" id="summaryPraise"></p>
+        <div class="summary-stats">
+            <div><b id="sumTime">0:00</b><small>время</small></div>
+            <div><b id="sumExercises">0</b><small>упражнений</small></div>
+            <div><b id="sumSets">0</b><small>подходов</small></div>
+        </div>
+        <p class="summary-note" id="summaryNote"></p>
+        <div class="summary-actions">
+            <button type="button" id="summaryReset">↺ Заново</button>
+            <button type="button" class="primary" id="summaryClose">Отлично!</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    function markDone(button) {
-        const card = button.closest(".exercise-card");
+(function () {
+    // ===== Настройки =====
+    const LEVELS = {
+        easy: { name: "🌱 Новичок", sets: 1, rest: 45 },
+        mid:  { name: "💪 Средний", sets: 2, rest: 60 },
+        pro:  { name: "🔥 Профи",   sets: 3, rest: 90 }
+    };
+    const STORAGE_KEY = "workout:" + document.title;
+    const LEVEL_KEY = "workout-level";
 
-        card.classList.toggle("completed");
-        button.classList.toggle("done");
+    const PHRASES_AFTER_SET = [
+        "Подход есть! Отдохни — и в бой 💪",
+        "Мощно! Восстанови дыхание",
+        "Так держать! Ещё немного",
+        "Отлично! Мышцы уже работают 🔥"
+    ];
+    const PHRASES_REST_END = [
+        "Время! Следующий подход — вперёд 💪",
+        "Отдых окончен. Добей это упражнение!",
+        "Погнали! Ты готов 🚀"
+    ];
+    const PHRASES_DONE = [
+        "Упражнение закрыто! 🔥",
+        "Ты сильнее, чем вчера 💪",
+        "Красавчик! Идём дальше 🚀",
+        "Есть! Ещё на шаг ближе к цели 🏆",
+        "Огонь! Так и продолжай ⚡"
+    ];
+    const PHRASES_FINAL = [
+        "Ты сделал то, что многие откладывают на завтра.",
+        "Дисциплина — это суперсила. И она у тебя есть.",
+        "Каждая тренировка — кирпичик в твою лучшую форму.",
+        "Сегодняшний ты гордится собой. Завтрашний — тоже."
+    ];
 
-        if (card.classList.contains("completed")) {
-            button.textContent = "✓ Выполнено";
+    const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+    const today = new Date().toISOString().slice(0, 10);
+    const $ = id => document.getElementById(id);
+    const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+
+    // ===== Состояние =====
+    let level = "mid";
+    let state = { sets: {}, startedAt: null, finishedAt: null };
+    try {
+        level = localStorage.getItem(LEVEL_KEY) || "mid";
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+        if (saved && saved.date === today) state = Object.assign(state, saved);
+    } catch (e) { }
+    if (!LEVELS[level]) level = "mid";
+
+    function save() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign({ date: today }, state)));
+            localStorage.setItem(LEVEL_KEY, level);
+        } catch (e) { }
+    }
+
+    const cards = Array.from(document.querySelectorAll(".exercise-card"));
+    const restTimers = {};
+    const exTimers = {};
+
+    // ===== Подготовка карточек =====
+    cards.forEach((card, i) => {
+        card.dataset.idx = i;
+        const text = card.querySelector("p").textContent;
+        const oldButton = card.querySelector(".done-button");
+        const controls = document.createElement("div");
+        controls.className = "controls";
+        oldButton.replaceWith(controls);
+        card._controls = controls;
+
+        if (card.closest(".section.shoulders")) {
+            card.dataset.kind = "sets";
+            controls.innerHTML =
+                '<div class="sets"></div>' +
+                '<div class="rest">' +
+                '<div class="rest-top"><span>⏱ Отдых — дыши глубже</span><b class="rest-time"></b></div>' +
+                '<div class="rest-bar"><i></i></div>' +
+                '<div class="rest-actions">' +
+                '<button type="button" data-act="add">+15 сек</button>' +
+                '<button type="button" data-act="skip">Я готов!</button>' +
+                '</div></div>' +
+                '<div class="motivation"></div>';
+
+            controls.addEventListener("click", e => {
+                const setBtn = e.target.closest(".set-btn");
+                if (setBtn && !setBtn.disabled) return onSet(card, Number(setBtn.dataset.set));
+                const act = e.target.closest("[data-act]");
+                if (act && act.dataset.act === "add") addRest(card, 15);
+                if (act && act.dataset.act === "skip") finishRest(card, false);
+            });
+            buildSetButtons(card);
         } else {
-            button.textContent = "✓ Выполнено";
+            const m = text.match(/(\d+)(?:\s*[-–]\s*(\d+))?\s*сек/);
+            if (m) {
+                card.dataset.kind = "timed";
+                card.dataset.secs = m[2] || m[1];
+                card.dataset.sides = /на кажд(ую|ый) (руку|бок|ногу|сторону)/.test(text) ? 2 : 1;
+                controls.innerHTML =
+                    '<button class="timer-btn" type="button"></button>' +
+                    '<div class="motivation"></div>' +
+                    '<button class="manual-link" type="button">отметить без таймера</button>';
+                controls.querySelector(".timer-btn").addEventListener("click", () => onTimer(card));
+                controls.querySelector(".manual-link").addEventListener("click", () => {
+                    resetExTimer(card);
+                    setDone(card, done(card) ? 0 : 1);
+                });
+            } else {
+                card.dataset.kind = "single";
+                controls.innerHTML = '<button class="done-button" type="button"></button>';
+                controls.firstChild.addEventListener("click", () => setDone(card, done(card) ? 0 : 1));
+            }
+        }
+        render(card);
+    });
+
+    function totalOf(card) {
+        return card.dataset.kind === "sets" ? LEVELS[level].sets : 1;
+    }
+    function done(card) { return Math.min(state.sets[card.dataset.idx] || 0, totalOf(card)); }
+    function isComplete(card) { return done(card) >= totalOf(card); }
+
+    function buildSetButtons(card) {
+        const wrap = card._controls.querySelector(".sets");
+        wrap.innerHTML = "";
+        for (let n = 1; n <= totalOf(card); n++) {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "set-btn";
+            b.dataset.set = n;
+            wrap.appendChild(b);
+        }
+        card._controls.querySelector(".rest-time").textContent = fmt(LEVELS[level].rest);
+    }
+
+    // ===== Отметки =====
+    function setDone(card, value) {
+        const wasComplete = isComplete(card);
+        if (value) state.sets[card.dataset.idx] = value; else delete state.sets[card.dataset.idx];
+        if (value && !state.startedAt) state.startedAt = Date.now();
+        const allDone = cards.every(isComplete);
+        state.finishedAt = allDone ? (state.finishedAt || Date.now()) : null;
+        save();
+        render(card);
+        updateProgress();
+        if (!wasComplete && isComplete(card)) celebrate(card, allDone);
+    }
+
+    function onSet(card, n) {
+        const cur = done(card);
+        const total = totalOf(card);
+        const motivation = card._controls.querySelector(".motivation");
+
+        if (n <= cur) {                          // отмена этого и следующих подходов
+            stopRest(card);
+            motivation.textContent = "";
+            setDone(card, n - 1);
+        } else if (n === cur + 1) {
+            if (n < total) {
+                motivation.textContent = pick(PHRASES_AFTER_SET) + " (" + n + " из " + total + ")";
+                setDone(card, n);
+                startRest(card);
+            } else {
+                stopRest(card);
+                motivation.textContent = pick(PHRASES_DONE);
+                setDone(card, n);
+            }
         }
     }
+
+    function render(card) {
+        const cur = done(card);
+        card.classList.toggle("completed", isComplete(card));
+        const kind = card.dataset.kind;
+
+        if (kind === "sets") {
+            card._controls.querySelectorAll(".set-btn").forEach(b => {
+                const n = Number(b.dataset.set);
+                const label = totalOf(card) === 1 ? "Подход" : "Подход " + n;
+                b.classList.toggle("done", n <= cur);
+                b.textContent = (n <= cur ? "✓ " : "") + label;
+                b.disabled = n > cur + 1;
+                if (n !== cur + 1) b.classList.remove("ready");
+            });
+        } else if (kind === "timed") {
+            const btn = card._controls.querySelector(".timer-btn");
+            const t = exTimers[card.dataset.idx];
+            const secs = Number(card.dataset.secs), sides = Number(card.dataset.sides);
+            btn.classList.toggle("done", cur >= 1);
+            btn.classList.toggle("running", !!(t && t.running));
+            card._controls.querySelector(".manual-link").textContent =
+                cur >= 1 ? "снять отметку" : "отметить без таймера";
+            if (cur >= 1) {
+                btn.textContent = "✓ Выполнено";
+                btn.style.setProperty("--p", "0%");
+            } else if (t) {
+                const left = Math.ceil(t.remaining / 1000);
+                const side = sides > 1 ? "Сторона " + t.side + " · " : "";
+                btn.textContent = (t.running ? "⏱ " : "▶ ") + side + fmt(left) + (t.running ? "" : " (пауза)");
+                const p = 100 - (t.remaining / (secs * 1000)) * 100;
+                btn.style.setProperty("--p", p + "%");
+            } else {
+                btn.textContent = "▶ Старт " + (sides > 1 ? "2 × " : "") + fmt(secs);
+                btn.style.setProperty("--p", "0%");
+            }
+        } else {
+            const btn = card._controls.querySelector(".done-button");
+            btn.classList.toggle("done", cur >= 1);
+            btn.textContent = cur >= 1 ? "✓ Выполнено" : "Выполнить";
+        }
+    }
+
+    // ===== Таймер упражнений на время =====
+    function onTimer(card) {
+        const idx = card.dataset.idx;
+        if (done(card)) { resetExTimer(card); return setDone(card, 0); }
+        let t = exTimers[idx];
+        if (!t) {
+            t = exTimers[idx] = { remaining: Number(card.dataset.secs) * 1000, side: 1, running: false };
+            if (!state.startedAt) { state.startedAt = Date.now(); save(); }
+        }
+        if (t.running) {
+            t.running = false;
+            clearInterval(t.interval);
+        } else {
+            t.running = true;
+            t.last = Date.now();
+            t.interval = setInterval(() => exTick(card), 200);
+            card._controls.querySelector(".motivation").textContent = "Дыши ровно и расслабься 🧘";
+        }
+        render(card);
+    }
+
+    function exTick(card) {
+        const t = exTimers[card.dataset.idx];
+        if (!t) return;
+        const now = Date.now();
+        t.remaining -= now - t.last;
+        t.last = now;
+        if (t.remaining <= 0) {
+            if (t.side < Number(card.dataset.sides)) {
+                t.side++;
+                t.remaining = Number(card.dataset.secs) * 1000;
+                beep(1);
+                card._controls.querySelector(".motivation").textContent = "Смена стороны! 🔄";
+                showToast("🔄 Смена стороны — " + card.querySelector("h3").textContent);
+            } else {
+                resetExTimer(card);
+                beep(2);
+                card._controls.querySelector(".motivation").textContent = pick(PHRASES_DONE);
+                setDone(card, 1);
+                return;
+            }
+        }
+        render(card);
+    }
+
+    function resetExTimer(card) {
+        const t = exTimers[card.dataset.idx];
+        if (t) clearInterval(t.interval);
+        delete exTimers[card.dataset.idx];
+        render(card);
+    }
+
+    // ===== Таймер отдыха =====
+    function startRest(card) {
+        Object.keys(restTimers).forEach(k => stopRest(cards[k]));
+        const rest = LEVELS[level].rest;
+        const t = { end: Date.now() + rest * 1000, total: rest };
+        restTimers[card.dataset.idx] = t;
+        card._controls.querySelector(".rest").classList.add("active");
+        t.interval = setInterval(() => restTick(card), 250);
+        restTick(card);
+    }
+
+    function addRest(card, sec) {
+        const t = restTimers[card.dataset.idx];
+        if (!t) return;
+        t.end += sec * 1000;
+        t.total += sec;
+        restTick(card);
+    }
+
+    function restTick(card) {
+        const t = restTimers[card.dataset.idx];
+        if (!t) return;
+        const left = Math.max(0, Math.ceil((t.end - Date.now()) / 1000));
+        card._controls.querySelector(".rest-time").textContent = fmt(left);
+        card._controls.querySelector(".rest-bar i").style.width = (left / t.total * 100) + "%";
+        if (left <= 0) finishRest(card, true);
+    }
+
+    function stopRest(card) {
+        const t = restTimers[card.dataset.idx];
+        if (t) clearInterval(t.interval);
+        delete restTimers[card.dataset.idx];
+        if (card._controls.querySelector(".rest")) {
+            card._controls.querySelector(".rest").classList.remove("active");
+            card._controls.querySelector(".rest-time").textContent = fmt(LEVELS[level].rest);
+        }
+    }
+
+    function finishRest(card, withSignal) {
+        stopRest(card);
+        const cur = done(card);
+        if (cur === 0 || isComplete(card)) return;
+        const next = card._controls.querySelector(".set-btn[data-set='" + (cur + 1) + "']");
+        if (next) next.classList.add("ready");
+        card._controls.querySelector(".motivation").textContent = pick(PHRASES_REST_END);
+        if (withSignal) {
+            beep(2);
+            try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) { }
+            showToast("⏰ Отдых окончен — " + card.querySelector("h3").textContent);
+        }
+    }
+
+    function beep(times) {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            for (let k = 0; k < times; k++) {
+                const delay = k * 0.25;
+                const osc = ctx.createOscillator(), gain = ctx.createGain();
+                osc.frequency.value = 880;
+                gain.gain.setValueAtTime(0.25, ctx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.18);
+                osc.connect(gain).connect(ctx.destination);
+                osc.start(ctx.currentTime + delay);
+                osc.stop(ctx.currentTime + delay + 0.2);
+            }
+        } catch (e) { }
+    }
+
+    // ===== Уровень =====
+    const levelSwitch = $("levelSwitch");
+    function renderLevel() {
+        levelSwitch.querySelectorAll("button").forEach(b =>
+            b.classList.toggle("active", b.dataset.level === level));
+    }
+    levelSwitch.addEventListener("click", e => {
+        const b = e.target.closest("button");
+        if (!b || b.dataset.level === level) return;
+        level = b.dataset.level;
+        cards.forEach(c => {
+            if (c.dataset.kind !== "sets") return;
+            stopRest(c);
+            c._controls.querySelector(".motivation").textContent = "";
+            buildSetButtons(c);
+            render(c);
+        });
+        state.finishedAt = cards.every(isComplete) ? state.finishedAt || Date.now() : null;
+        save();
+        renderLevel();
+        updateProgress();
+        showToast("Уровень: " + LEVELS[level].name);
+    });
+    renderLevel();
+
+    // ===== Прогресс и секундомер =====
+    function updateProgress() {
+        const total = cards.reduce((s, c) => s + totalOf(c), 0);
+        const finished = cards.reduce((s, c) => s + done(c), 0);
+        const pct = total ? Math.round(finished / total * 100) : 0;
+
+        $("progressFill").style.width = pct + "%";
+        $("progressPercent").textContent = pct + "%";
+        $("progressCount").textContent = finished + " / " + total + " отметок";
+
+        let label = "Поехали! Первый шаг — самый важный";
+        if (pct >= 100) label = "Тренировка завершена! Ты — машина 🏆";
+        else if (pct >= 75) label = "Финишная прямая — не сдавайся 🔥";
+        else if (pct >= 50) label = "Больше половины позади! ⚡";
+        else if (pct >= 25) label = "Разогнались — не сбавляй темп 🚀";
+        else if (pct > 0) label = "Хорошее начало 💪";
+        $("progressLabel").textContent = label;
+
+        const start = $("startButton");
+        if (pct >= 100) start.textContent = "📊 Посмотреть итоги";
+        else if (pct > 0) start.textContent = "▶ Продолжить тренировку";
+        else start.textContent = "▶ Начать тренировку";
+
+        updateElapsed();
+        if (stepperOpen()) renderStepHeader();
+    }
+
+    function elapsedSeconds() {
+        if (!state.startedAt) return 0;
+        return Math.floor(((state.finishedAt || Date.now()) - state.startedAt) / 1000);
+    }
+
+    function updateElapsed() {
+        const s = elapsedSeconds();
+        const h = Math.floor(s / 3600);
+        $("elapsed").textContent = h ? h + ":" + fmt(s % 3600).padStart(5, "0") : fmt(s);
+    }
+    setInterval(updateElapsed, 1000);
+
+    // ===== Пошаговый режим =====
+    const stepper = $("stepper");
+    const slot = stepper.querySelector(".stepper-controls");
+    const ACCENTS = { warmup: "#28a745", shoulders: "#dc3545", cooldown: "#e0a800" };
+    let current = -1;
+
+    function stepperOpen() { return !stepper.hidden; }
+
+    function openStepper(index) {
+        stepper.hidden = false;
+        document.body.style.overflow = "hidden";
+        showStep(index);
+    }
+
+    function closeStepper() {
+        if (current >= 0) cards[current].appendChild(cards[current]._controls);
+        current = -1;
+        stepper.hidden = true;
+        document.body.style.overflow = "";
+    }
+
+    function showStep(index) {
+        if (current >= 0) cards[current].appendChild(cards[current]._controls);
+        current = index;
+        const card = cards[index];
+        const section = card.closest(".section");
+        const key = Object.keys(ACCENTS).find(k => section.classList.contains(k));
+        stepper.querySelector(".stepper-inner").style.setProperty("--accent", ACCENTS[key]);
+        stepper.querySelector(".stepper-section").textContent = section.querySelector("h2").textContent.trim();
+        const img = card.querySelector("img");
+        const bigImg = stepper.querySelector(".stepper-img");
+        bigImg.src = img ? img.getAttribute("src") : "";
+        bigImg.alt = img ? img.alt : "";
+        stepper.querySelector(".stepper-title").textContent = card.querySelector("h3").textContent;
+        stepper.querySelector(".stepper-desc").textContent = card.querySelector("p").textContent.trim();
+        slot.appendChild(card._controls);
+        stepper.querySelector("[data-nav='prev']").disabled = index === 0;
+        stepper.querySelector("[data-nav='next']").textContent =
+            index === cards.length - 1 ? "Завершить ✓" : "Дальше →";
+        stepper.querySelector(".stepper-inner").scrollTop = 0;
+        renderStepHeader();
+    }
+
+    function renderStepHeader() {
+        stepper.querySelector(".stepper-count").textContent = "Упражнение " + (current + 1) + " / " + cards.length;
+        const doneCount = cards.filter(isComplete).length;
+        stepper.querySelector(".stepper-bar i").style.width = (doneCount / cards.length * 100) + "%";
+    }
+
+    function nextIncomplete(from) {
+        for (let k = 1; k <= cards.length; k++) {
+            const j = (from + k) % cards.length;
+            if (!isComplete(cards[j])) return j;
+        }
+        return -1;
+    }
+
+    stepper.addEventListener("click", e => {
+        if (e.target === stepper || e.target.closest(".stepper-close")) return closeStepper();
+        const nav = e.target.closest("[data-nav]");
+        if (!nav || nav.disabled) return;
+        if (nav.dataset.nav === "prev") showStep(current - 1);
+        else if (current === cards.length - 1) {
+            closeStepper();
+            if (cards.every(isComplete)) openSummary();
+        } else showStep(current + 1);
+    });
+
+    document.addEventListener("keydown", e => {
+        if (!stepperOpen()) return;
+        if (e.key === "Escape") closeStepper();
+        if (e.key === "ArrowRight" && current < cards.length - 1) showStep(current + 1);
+        if (e.key === "ArrowLeft" && current > 0) showStep(current - 1);
+    });
+
+    $("startButton").addEventListener("click", () => {
+        if (cards.every(isComplete)) return openSummary();
+        if (!state.startedAt) { state.startedAt = Date.now(); save(); }
+        openStepper(nextIncomplete(-1));
+    });
+
+    // ===== Итоги =====
+    const summary = $("summary");
+
+    function openSummary() {
+        const secs = elapsedSeconds();
+        const setsDone = cards.reduce((s, c) => s + done(c), 0);
+        $("sumTime").textContent = fmt(secs);
+        $("sumExercises").textContent = cards.filter(isComplete).length;
+        $("sumSets").textContent = setsDone;
+        $("summaryPraise").textContent = pick(PHRASES_FINAL);
+        $("summaryNote").textContent = "Уровень: " + LEVELS[level].name;
+        summary.hidden = false;
+    }
+
+    $("summaryClose").addEventListener("click", () => { summary.hidden = true; });
+    summary.addEventListener("click", e => { if (e.target === summary) summary.hidden = true; });
+    $("summaryReset").addEventListener("click", () => {
+        summary.hidden = true;
+        resetAll(false);
+    });
+
+    // ===== Праздники =====
+    function celebrate(card, allDone) {
+        card.classList.remove("pop");
+        void card.offsetWidth;
+        card.classList.add("pop");
+
+        const r = (stepperOpen() ? stepper.querySelector(".stepper-inner") : card).getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + r.height / 2, 40);
+
+        const section = card.closest(".section");
+        const sectionCards = Array.from(section.querySelectorAll(".exercise-card"));
+
+        if (allDone) {
+            setTimeout(() => {
+                if (stepperOpen()) closeStepper();
+                for (let k = 0; k < 5; k++) {
+                    setTimeout(() => burst(Math.random() * innerWidth, innerHeight * 0.3, 80), k * 300);
+                }
+                const footer = document.querySelector(".footer p");
+                if (footer) footer.textContent = "🏆 Тренировка завершена! Ты сделал это!";
+                setTimeout(openSummary, 900);
+            }, 600);
+            return;
+        }
+
+        if (sectionCards.every(isComplete)) {
+            const title = section.querySelector("h2").textContent.trim();
+            showToast("🎉 Раздел «" + title + "» закрыт!", 3000);
+            burst(innerWidth / 2, innerHeight / 3, 100);
+        } else if (card.dataset.kind === "sets") {
+            showToast(pick(PHRASES_DONE));
+        }
+
+        // в пошаговом режиме — автопереход к следующему упражнению
+        if (stepperOpen() && cards[current] === card) {
+            const idx = current;
+            setTimeout(() => {
+                if (stepperOpen() && current === idx) {
+                    const next = nextIncomplete(idx);
+                    if (next >= 0) showStep(next);
+                }
+            }, 1300);
+        }
+    }
+
+    let toastTimer;
+    function showToast(text, ms = 2200) {
+        const toast = $("toast");
+        toast.textContent = text;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), ms);
+    }
+
+    // ===== Конфетти =====
+    const canvas = $("confetti");
+    const ctx = canvas.getContext("2d");
+    const colors = ["#667eea", "#764ba2", "#28a745", "#e0a800", "#dc3545", "#17a2b8"];
+    let particles = [];
+    let running = false;
+
+    function resize() {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+    }
+    addEventListener("resize", resize);
+    resize();
+
+    function burst(x, y, count) {
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        for (let i = 0; i < count; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 3 + Math.random() * 7;
+            particles.push({
+                x, y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 4,
+                size: 5 + Math.random() * 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rot: Math.random() * Math.PI,
+                vr: (Math.random() - 0.5) * 0.3,
+                life: 90 + Math.random() * 40
+            });
+        }
+        if (!running) { running = true; requestAnimationFrame(frame); }
+    }
+
+    function frame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(p => p.life > 0 && p.y < canvas.height + 20);
+        particles.forEach(p => {
+            p.vy += 0.25;
+            p.vx *= 0.99;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rot += p.vr;
+            p.life--;
+            ctx.save();
+            ctx.globalAlpha = Math.min(1, p.life / 30);
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            ctx.restore();
+        });
+        if (particles.length) requestAnimationFrame(frame);
+        else { running = false; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    }
+
+    // ===== Сброс =====
+    function resetAll(ask) {
+        if (ask && !confirm("Сбросить прогресс тренировки?")) return;
+        if (stepperOpen()) closeStepper();
+        state = { sets: {}, startedAt: null, finishedAt: null };
+        save();
+        cards.forEach(c => {
+            if (c.dataset.kind === "sets") stopRest(c);
+            if (c.dataset.kind === "timed") resetExTimer(c);
+            const m = c._controls.querySelector(".motivation");
+            if (m) m.textContent = "";
+            render(c);
+        });
+        const footer = document.querySelector(".footer p");
+        if (footer) footer.textContent = "💪 Отличная работа!";
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    $("resetButton").addEventListener("click", () => resetAll(true));
+
+    updateProgress();
+})();
 </script>
 
 </body>
