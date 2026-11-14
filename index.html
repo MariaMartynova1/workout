@@ -1,3 +1,6 @@
+Вот полный код `index.html`. Эту страницу можно вставить вместо вашей старой стартовой, а файл тоже лежит в сообщении выше. Неделя будет заполняться, только если рядом лежат новые версии `shoulders.html`, `index2.html` и `legs.html`.
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -35,11 +38,117 @@
 
         .subtitle {
             color: white;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             line-height: 1.6;
         }
 
+        /* ===== План недели ===== */
+        .week {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px #0002;
+        }
+
+        .week-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .week-head h2 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .week-count {
+            color: #764ba2;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+        }
+
+        .day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .day-dot {
+            width: 42px;
+            height: 42px;
+            max-width: 100%;
+            border-radius: 50%;
+            background: #f1f2f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: bold;
+        }
+
+        .day.done .day-dot {
+            background: #28a745;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .day.today .day-name {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .day.today .day-dot {
+            box-shadow: 0 0 0 3px #667eea;
+        }
+
+        .day.future .day-dot {
+            opacity: 0.5;
+        }
+
+        /* ===== Сегодня ===== */
+        .today-box {
+            display: block;
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fff8e1, #ffefc2);
+            color: #6b5300;
+            text-decoration: none;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        a.today-box:hover {
+            filter: brightness(0.97);
+        }
+
+        .today-box.rest {
+            background: linear-gradient(135deg, #e8f7ec, #d3f0dc);
+            color: #1e6b33;
+        }
+
+        .today-box b {
+            font-size: 1.05rem;
+        }
+
+        /* ===== Карточки программ ===== */
         .program {
+            position: relative;
             display: block;
             padding: 28px 20px;
             margin-bottom: 20px;
@@ -48,11 +157,36 @@
             color: #333;
             text-decoration: none;
             box-shadow: 0 8px 25px #0002;
+            border: 3px solid transparent;
             transition: transform 0.2s;
         }
 
         .program:hover {
             transform: translateY(-4px);
+        }
+
+        .program.recommended {
+            border-color: #ffc107;
+            box-shadow: 0 8px 30px rgba(255, 193, 7, 0.45);
+        }
+
+        .badge {
+            display: none;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 14px;
+            border-radius: 20px;
+            background: #ffc107;
+            color: #4a3800;
+            font-size: 0.85rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .program.recommended .badge {
+            display: block;
         }
 
         .program .emoji {
@@ -70,9 +204,35 @@
             line-height: 1.5;
         }
 
+        .program .last {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .program .last.done-today {
+            color: #28a745;
+            font-weight: bold;
+        }
+
         .footer {
             color: white;
             margin-top: 25px;
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .week {
+                padding: 16px 12px;
+            }
+
+            .day-dot {
+                width: 36px;
+                height: 36px;
+            }
         }
     </style>
 </head>
@@ -85,19 +245,161 @@
             Выбери программу и приступай к занятиям!
         </p>
 
-        <a class="program" href="shoulders.html">
+        <!-- План недели -->
+        <section class="week">
+            <div class="week-head">
+                <h2>📅 Эта неделя</h2>
+                <span class="week-count" id="weekCount"></span>
+            </div>
+            <div class="days" id="days"></div>
+            <div id="todayBox"></div>
+        </section>
+
+        <a class="program" href="shoulders.html" data-title="Программа упражнений на плечи">
+            <span class="badge">⭐ Рекомендуем сегодня</span>
             <div class="emoji">💪</div>
             <h2>Упражнения на плечи</h2>
             <p>Разминка, основная тренировка и заминка</p>
+            <div class="last"></div>
         </a>
 
-        <a class="program" href="index2.html">
+        <a class="program" href="index2.html" data-title="Программа упражнений на пресс">
+            <span class="badge">⭐ Рекомендуем сегодня</span>
             <div class="emoji">🔥</div>
             <h2>Упражнения на пресс</h2>
             <p>Разминка, основная тренировка и заминка</p>
+            <div class="last"></div>
+        </a>
+
+        <a class="program" href="legs.html" data-title="Программа упражнений на ноги">
+            <span class="badge">⭐ Рекомендуем сегодня</span>
+            <div class="emoji">🦵</div>
+            <h2>Упражнения на ноги</h2>
+            <p>Разминка, основная тренировка и растяжка</p>
+            <div class="last"></div>
         </a>
 
         <p class="footer">Выбери программу и тренируйся регулярно!</p>
     </main>
+
+    <script>
+    (function () {
+        const DAY_NAMES = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+        const DAY_MS = 24 * 60 * 60 * 1000;
+
+        const localDate = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+        const parseDate = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+
+        function plural(n, one, few, many) {
+            const n10 = n % 10, n100 = n % 100;
+            if (n10 === 1 && n100 !== 11) return one;
+            if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return few;
+            return many;
+        }
+
+        // ===== Данные со страниц тренировок =====
+        let history = {};
+        try { history = JSON.parse(localStorage.getItem("workout-history") || "{}"); } catch (e) { }
+
+        const programs = Array.from(document.querySelectorAll(".program")).map(el => ({
+            el,
+            title: el.dataset.title,
+            name: el.querySelector("h2").textContent,
+            emoji: el.querySelector(".emoji").textContent
+        }));
+
+        const now = new Date();
+        const todayStr = localDate(now);
+        const todayDate = parseDate(todayStr);
+
+        // тренировка, завершенная сегодня, но еще не попавшая в историю
+        programs.forEach(p => {
+            try {
+                const s = JSON.parse(localStorage.getItem("workout:" + p.title) || "null");
+                if (s && s.date === todayStr && s.finishedAt) {
+                    history[todayStr] = history[todayStr] || [];
+                    if (!history[todayStr].includes(p.title)) history[todayStr].push(p.title);
+                }
+            } catch (e) { }
+        });
+
+        // когда каждая программа выполнялась в последний раз
+        programs.forEach(p => {
+            p.last = null;
+            Object.keys(history).forEach(d => {
+                if (history[d].includes(p.title) && (!p.last || d > p.last)) p.last = d;
+            });
+            p.daysAgo = p.last ? Math.round((todayDate - parseDate(p.last)) / DAY_MS) : null;
+        });
+
+        // ===== План недели =====
+        const monday = new Date(todayDate);
+        monday.setDate(todayDate.getDate() - ((todayDate.getDay() + 6) % 7));
+
+        let weekTotal = 0;
+        const daysEl = document.getElementById("days");
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(monday);
+            d.setDate(monday.getDate() + i);
+            const ds = localDate(d);
+            const done = history[ds] || [];
+            weekTotal += done.length;
+
+            const icons = done.map(t => (programs.find(p => p.title === t) || {}).emoji).filter(Boolean);
+            const cell = document.createElement("div");
+            cell.className = "day" +
+                (done.length ? " done" : "") +
+                (ds === todayStr ? " today" : "") +
+                (d > todayDate ? " future" : "");
+            cell.title = done.length
+                ? done.map(t => (programs.find(p => p.title === t) || { name: t }).name).join(", ")
+                : "";
+            cell.innerHTML =
+                '<span class="day-name">' + DAY_NAMES[i] + '</span>' +
+                '<span class="day-dot">' + (icons.length ? icons.join("") : d.getDate()) + '</span>';
+            daysEl.appendChild(cell);
+        }
+
+        document.getElementById("weekCount").textContent = weekTotal
+            ? "🔥 " + weekTotal + " " + plural(weekTotal, "тренировка", "тренировки", "тренировок") + " на неделе"
+            : "Первая тренировка недели ждет тебя 💪";
+
+        // ===== Последний раз =====
+        programs.forEach(p => {
+            const el = p.el.querySelector(".last");
+            if (p.daysAgo === null) el.textContent = "Еще не выполнялась";
+            else if (p.daysAgo === 0) { el.textContent = "✓ Сегодня выполнено 🏆"; el.classList.add("done-today"); }
+            else if (p.daysAgo === 1) el.textContent = "Последний раз: вчера";
+            else el.textContent = "Последний раз: " + p.daysAgo + " " + plural(p.daysAgo, "день", "дня", "дней") + " назад";
+        });
+
+        // ===== Рекомендация на сегодня =====
+        const box = document.getElementById("todayBox");
+        const doneToday = history[todayStr] || [];
+
+        if (doneToday.length) {
+            box.innerHTML = '<div class="today-box rest"><b>🏆 Сегодня тренировка уже есть!</b><br>' +
+                'Отличная работа. Восстановление — тоже часть прогресса.</div>';
+        } else {
+            // программа, которую дольше всего не делали (или еще ни разу)
+            const rec = programs.slice().sort((a, b) => {
+                const da = a.daysAgo === null ? Infinity : a.daysAgo;
+                const db = b.daysAgo === null ? Infinity : b.daysAgo;
+                return db - da;
+            })[0];
+            rec.el.classList.add("recommended");
+
+            const why = rec.daysAgo === null
+                ? "Эту программу ты еще не пробовал — самое время начать!"
+                : "Не выполнялась уже " + rec.daysAgo + " " + plural(rec.daysAgo, "день", "дня", "дней") + ".";
+            const yesterday = history[localDate(new Date(todayDate.getTime() - DAY_MS))];
+            const extra = yesterday && yesterday.length ? " Вчера была тренировка — сегодня дадим поработать другим мышцам." : "";
+
+            box.innerHTML = '<a class="today-box" href="' + rec.el.getAttribute("href") + '">' +
+                '<b>⭐ Сегодня: ' + rec.emoji + ' ' + rec.name + '</b><br>' + why + extra + ' Нажми, чтобы начать →</a>';
+        }
+    })();
+    </script>
 </body>
 </html>
+```
